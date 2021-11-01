@@ -22,7 +22,7 @@ class Products{
         try {
             const res = await fetch("products.json")
             const data = await res.json();
-            return data
+            return data.items
         } catch (error) {
             console.log(error);
         }
@@ -31,7 +31,28 @@ class Products{
 
 // display products
 class UI {
-    displayProducts(products)
+    displayProducts(products){
+        let result = '';
+        products.forEach(product => {
+            result += `
+            <!-- single product -->
+            <article class="product">
+                <div class="img-container">
+                    <img src=${product.fields.image.fields.file.url} alt="product" class="product-img">
+                    <button class="bag-btn" data-id="1">
+                        <i class="fas fa-shopping-cart"></i>
+                        add to bag
+                    </button>
+                </div>
+                <h3>${product.fields.title}</h3>
+                <h4>$${product.fields.price}</h4>
+            </article>
+            <!-- end of  single product-->
+            `
+        })
+
+        productsDOM.innerHTML = result
+    }
 }
 
 //local storage
@@ -44,10 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const products = new Products();
 
     // get all products
-    products.getProduct().then(data => {
-        data.items.map(item =>{
-        
-            
-        })
-    });
+    products.getProduct().then(products => {
+         ui.displayProducts(products)
+    })
+})
+
+cartBtn.addEventListener('click', () => {
+    cartOverlay.style.visibility = "visible";
+    cartDOM.style.transform = "translateX(0%)"
+})
+
+closeCartBtn.addEventListener('click', () => {
+    cartOverlay.style.visibility = "hidden";
+    cartDOM.style.transform = "translateX(101%)"
 })
