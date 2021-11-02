@@ -10,8 +10,6 @@ const cartTotal = document.querySelector(".cart-content");
 const cartContent = document.querySelector(".cart-total");
 const productsDOM = document.querySelector('.products-center');
 
-console.log(productsDOM)
-
 
 //cart
 let cart = []
@@ -50,14 +48,20 @@ class UI {
             <!-- end of  single product-->
             `
         })
-
         productsDOM.innerHTML = result
+    }
+
+    getBagButtons(){
+        const buttons = [...document.querySelectorAll('.bag-btn')];
+        console.log(buttons);
     }
 }
 
 //local storage
 class Storage{
-
+    static saveProducts(products){
+        localStorage.setItem('products', JSON.stringify(products))
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -66,7 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // get all products
     products.getProduct().then(products => {
-         ui.displayProducts(products)
+         ui.displayProducts(products);
+         Storage.saveProducts(products)
+    }).then(() => {
+        ui.getBagButtons()
     })
 })
 
